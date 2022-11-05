@@ -36,7 +36,7 @@ export const ErrorConstants = {
 export function response(option?: ResOp): ResOp {
   return {
     data: option?.data ?? null,
-    code: option?.code ?? null,
+    code: option?.code ?? 200,
     message: option?.code
       ? getErrorMessageByCode(option!.code) ||
         option?.message ||
