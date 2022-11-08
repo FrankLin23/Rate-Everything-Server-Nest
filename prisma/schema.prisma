@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -21,9 +18,59 @@ model User {
   updatedTime DateTime @default(now())
   avatar      String   @default("https://p9-passport.byteacctimg.com/img/mosaic-legacy/3795/3047680722~300x300.image")
   profile     String?
+  moments     Moment[]
+
+  @@map("user")
+}
+
+model Moment {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  content   String
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+
+  @@map("moment")
+}
+
+model Category {
+  id        String              @id @default(cuid())
+  name      String
+  type      Tags
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @default(now())
+  items     CategoriesOnItems[]
+}
+
+model Item {
+  id          String              @id @default(cuid())
+  name        String
+  description String
+  picture     String?
+  type        Tags
+  createdAt   DateTime
+  updatedAt   DateTime
+  categories  CategoriesOnItems[]
+}
+
+model CategoriesOnItems {
+  itemId     String
+  categoryId String
+  assignedAt DateTime @default(now())
+  category   Category @relation(fields: [categoryId], references: [id])
+  item       Item     @relation(fields: [itemId], references: [id])
+
+  @@id([itemId, categoryId])
 }
 
 enum Role {
   ADMIN
   USER
+}
+
+enum Tags {
+  Entertainment
+  Destination
+  Goods
+  Internet
 }
